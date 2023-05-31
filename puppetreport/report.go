@@ -74,6 +74,13 @@ func (r runReport) success() bool {
 			ok++
 		}
 	}
+	for _, log := range r.Logs {
+		if log.Level == "err" {
+			failed++
+		} else {
+			ok++
+		}
+	}
 	return ok > 0 && failed == 0
 }
 
@@ -102,7 +109,13 @@ func (s puppetUtilMetric) Values() map[string]float64 {
 }
 
 type puppetUtilLog struct {
-	Time time.Time `yaml:"time"`
+	Level   string    `yaml:"level"`
+	Message string    `yaml:"message"`
+	Source  string    `yaml:"source"`
+	Tags    []string  `yaml:"tags"`
+	Time    time.Time `yaml:"time"`
+	File    string    `yaml:"file"`
+	Line    int       `yaml:"line"`
 }
 
 func load(path string) (runReport, error) {
